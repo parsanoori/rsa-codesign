@@ -121,42 +121,39 @@ fsm gcd_fsm(gcd_dp) {
         else (ready) -> s0;
 }
 
-//hardwired gendata_wired(gendata) {
-//    run;
-//}
-
 
 dp pow_dp (
-    in  a   :   ns(64);
     in  b   :   ns(64);
-    in  n   :   ns(64);
+    in  e   :   ns(64);
+    in  m   :   ns(64);
     in  load:   ns(1);
-    out c   :   ns(64);
+    out o   :   ns(64);
     out done:   ns(1)
 ) {
-    reg a_in, b_in, c_out, d, i : ns(64);
-    reg lda : ns(1);
+    reg acc, i : ns(64);
 
     always {
-        lda = load;
-        c = c_out;
-        done = i >= b;
+        o = acc;
+    }
+
+    sfg ready {
+        done = 0;
     }
 
     sfg init {
-        a_in = a;
-        b_in = b;
+        acc = 1;
         i = 0;
-        c_out = 1;
+        done = 0;
     }
 
-    sfg mul {
-        c_out = (a_in * c_out) % n;
+    sfg loop {
+        acc = (acc * b) % m;
         i = i + 1;
+        done = 0;
     }
 
-    sfg log {
-        $display("cycle=", $cycle, " a=", a_in, " b=", b_in, " c=", c, " done", done);
+    sfg outp_idle {
+        done = 1;
     }
 }
 
@@ -165,13 +162,13 @@ fsm pow_fsm(pow_dp) {
     state s1, s2;
 
     @s0 
-        if (lda) then (init, log) -> s1;
-        else (log) -> s0;
+        if (load) then (init) -> s1;
+        else (ready) -> s0;
     @s1 
-        if (done) then (log) -> s2;
-        else (mul, log) -> s1;
-    @s2 (log) -> s2;
-
+        if (i==e) then (outp_idle) -> s2;
+        else (loop) -> s1;
+    @s2 if (load) then (outp_idle) -> s2;
+        else (ready) -> s0;
 }
 
 dp top() {
