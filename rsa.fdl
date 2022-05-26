@@ -139,14 +139,14 @@ fsm gcd_fsm(gcd_dp) {
 
 
 dp pow_dp (
-    in  a   :   ns(32);
-    in  b   :   ns(32);
-    in  n   :   ns(32);
+    in  a   :   ns(64);
+    in  b   :   ns(64);
+    in  n   :   ns(64);
     in  load:   ns(1);
-    out c   :   ns(32);
+    out c   :   ns(64);
     out done:   ns(1)
 ) {
-    reg a_in, b_in, c_out, d, i : ns(32);
+    reg a_in, b_in, c_out, d, i : ns(64);
     reg lda : ns(1);
 
     always {
