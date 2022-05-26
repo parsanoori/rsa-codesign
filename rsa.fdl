@@ -22,13 +22,13 @@ ipblock arm_gcd_out(in gcd_out : ns(64)){
     ipparm "address=0x80000010";
 }
 
-ipblock arm_gcd_load(in gcd_load : ns(32)){
+ipblock arm_gcd_load(in gcd_load : ns(1)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000018";
 }
 
-ipblock arm_gcd_load(in gcd_done : ns(32)){
+ipblock arm_gcd_load(in gcd_done : ns(1)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x8000001c";
@@ -60,13 +60,13 @@ ipblock arm_pow_out(in pow_out : ns(64)){
     ipparm "address=0x80000038";
 }
 
-ipblock arm_pow_load(in pow_load : ns(32)){
+ipblock arm_pow_load(in pow_load : ns(1)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000040";
 }
 
-ipblock arm_pow_done(in pow_done : ns(32)){
+ipblock arm_pow_done(in pow_done : ns(1)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000044";
@@ -75,16 +75,16 @@ ipblock arm_pow_done(in pow_done : ns(32)){
 
 
 dp gcd_dp(
-    in  e   :   ns(32);
-    in  z   :   ns(32);
+    in  e   :   ns(64);
+    in  z   :   ns(64);
     in  load:   ns(1);
-    out c   :   ns(32);
+    out c   :   ns(64);
     out done:   ns(1)
 ) {
-    reg e_in : ns(32);
-    reg z_in : ns(32);
-    reg e_cal: ns(32);
-    reg c_out : ns(32);
+    reg e_in : ns(64);
+    reg z_in : ns(64);
+    reg e_cal: ns(64);
+    reg c_out : ns(64);
     reg lda : ns(1);
     reg done_gcd : ns(1);
 
@@ -187,14 +187,28 @@ fsm pow_fsm(pow_dp) {
 }
 
 dp top() {
-    sig e_before, z, e_after, d_after, d_before, c, n : ns(32);
-    sig done_gcd, lda, done_choose, done_power : ns(1);
-    sig msg : ns(32);
-    use gendata(e_before, lda, d_before, z, msg, n);
-    //use logger(e_before);
-    use gcd_dp(e_before, z, lda, e_after, done_gcd);
-    use choose_d_dp(e_after, z, d_before, done_gcd, d_after, done_choose);
-    use pow_dp(msg, e_after, n, done_choose, c, done_power);
+    sig gcd_in_a, gcd_in_b, gcd_out : ns(64);
+    sig gcd_load, gcd_done : ns(1);
+    sig pow_in_b, pow_in_e, pow_in_m, pow_out : ns(64);
+    sig pow_load, pow_done : ns(1);
+
+    use myarm;
+
+    use arm_gcd_in_a(gcd_in_a);
+    use arm_gcd_in_b(gcd_in_b);
+    use arm_gcd_out(gcd_out);
+    use arm_gcd_load(gcd_load);
+    use arm_gcd_done(gcd_done);
+
+    use arm_pow_in_b(pow_in_b);
+    use arm_pow_in_e(pow_in_e);
+    use arm_pow_in_m(pow_in_m);
+    use arm_pow_out(pow_out);
+    use arm_pow_load(pow_load);
+    use arm_pow_done(pow_done);
+
+    use gcd_dp(gcd_in_a, gcd_in_b, gcd_load, gcd_out, gcd_done);
+    use pow_dp(pow_in_b, pow_in_e, pow_in_m, pow_load, pow_out, pow_done);
 }
 
 system S {
