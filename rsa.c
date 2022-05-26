@@ -28,8 +28,7 @@ int main(){
     unsigned long long int n = p*q;
     // Finding other part of public key
     unsigned int long long e = 2;
-    unsigned long long int z = lcm(p-1,q-1);
-    // unsigned long long int z = (p-1)*(q-1);
+    unsigned long long int z = lcm(p-1,q-1); // results in smaller d than just multiplying them
 
     // point1
 
@@ -50,7 +49,7 @@ int main(){
         else
             d++;
     }
-    printf("e=%lld d=%lld z=%lld\n", e, d, z);
+    // printf("[debug] e=%lld d=%lld z=%lld\n", e, d, z);
     // point 3
 
     // Message to be encrypted
@@ -81,7 +80,7 @@ unsigned long long int gcd(unsigned long long int a, unsigned long long int b){
     while (*gcd_done !=1 );
     long long int result = *gcd_out;
     *gcd_load = 0;
-    printf("[debug] gcd(%lld, %lld) = %lld\n", a, b, result);
+    // printf("[debug] gcd(%lld, %lld) = %lld\n", a, b, result);
     return result;
 }
 
@@ -97,6 +96,6 @@ unsigned long long power(unsigned long long b, unsigned long long e, unsigned lo
     while (*pow_done !=1 );
     long long int result = *pow_out;
     *pow_load = 0;
-    printf("[debug] pow(%lld, %lld, %lld) = %lld\n", b, e, m, result);
+    // printf("[debug] pow(%lld, %lld, %lld) = %lld\n", b, e, m, result);
     return result;
 }
