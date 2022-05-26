@@ -37,7 +37,7 @@ ipblock arm_gcd_done(in data : ns(1)){
 
 
 ipblock arm_pow_in_b(out data : ns(64)){
-    iptype "armsystemsouce";
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000020";
 }
