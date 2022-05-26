@@ -4,70 +4,70 @@ ipblock myarm{
     ipparm "period=1";
 }
 
-ipblock arm_gcd_in_a(in data : ns(64)){
-    iptype "armsystemsink";
+ipblock arm_gcd_in_a(out data : ns(64)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000000";
 }
 
-ipblock arm_gcd_in_b(in data : ns(64)){
-    iptype "armsystemsink";
+ipblock arm_gcd_in_b(out data : ns(64)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000008";
 }
 
-ipblock arm_gcd_out(out data : ns(64)){
-    iptype "armsystemsource";
+ipblock arm_gcd_out(in data : ns(64)){
+    iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000010";
 }
 
-ipblock arm_gcd_load(in data : ns(1)){
-    iptype "armsystemsink";
+ipblock arm_gcd_load(out data : ns(1)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000018";
 }
 
-ipblock arm_gcd_done(out data : ns(1)){
-    iptype "armsystemsource";
+ipblock arm_gcd_done(in data : ns(1)){
+    iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x8000001c";
 }
 
 
 
-ipblock arm_pow_in_b(in data : ns(64)){
-    iptype "armsystemsink";
+ipblock arm_pow_in_b(out data : ns(64)){
+    iptype "armsystemsouce";
     ipparm "core=myarm";
     ipparm "address=0x80000020";
 }
 
-ipblock arm_pow_in_e(in data : ns(64)){
-    iptype "armsystemsink";
+ipblock arm_pow_in_e(out data : ns(64)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000028";
 }
 
-ipblock arm_pow_in_m(in data : ns(64)){
-    iptype "armsystemsink";
+ipblock arm_pow_in_m(out data : ns(64)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000030";
 }
 
-ipblock arm_pow_out(out data : ns(64)){
-    iptype "armsystemsource";
+ipblock arm_pow_out(in data : ns(64)){
+    iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000038";
 }
 
-ipblock arm_pow_load(in data : ns(1)){
-    iptype "armsystemsink";
+ipblock arm_pow_load(out data : ns(1)){
+    iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000040";
 }
 
-ipblock arm_pow_done(out data : ns(1)){
-    iptype "armsystemsource";
+ipblock arm_pow_done(in data : ns(1)){
+    iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000044";
 }
