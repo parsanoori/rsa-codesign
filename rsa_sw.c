@@ -12,8 +12,8 @@ int main(){
     unsigned long long int n = p*q;
     // Finding other part of public key
     unsigned int long long e = 2;
-    // unsigned long long int z = lcm(p-1,q-1);
-    unsigned long long int z = (p-1)*(q-1);
+    unsigned long long int z = lcm(p-1,q-1);
+    // unsigned long long int z = (p-1)*(q-1);
 
     // point1
 
@@ -61,7 +61,7 @@ int main(){
 unsigned long long int gcd(unsigned long long int a, unsigned long long int h){
     unsigned long long int a_f = a;
     unsigned long long int h_f = h;
-    unsigned int temp;
+    unsigned long long int temp;
     while (1) {
         temp = a%h;
         if (temp == 0) {

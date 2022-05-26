@@ -28,8 +28,8 @@ int main(){
     unsigned long long int n = p*q;
     // Finding other part of public key
     unsigned int long long e = 2;
-    // unsigned long long int z = lcm(p-1,q-1);
-    unsigned long long int z = (p-1)*(q-1);
+    unsigned long long int z = lcm(p-1,q-1);
+    // unsigned long long int z = (p-1)*(q-1);
 
     // point1
 
@@ -81,6 +81,7 @@ unsigned long long int gcd(unsigned long long int a, unsigned long long int b){
     while (*gcd_done !=1 );
     long long int result = *gcd_out;
     *gcd_load = 0;
+    printf("[debug] gcd(%lld, %lld) = %lld\n", a, b, result);
     return result;
 }
 
@@ -96,5 +97,6 @@ unsigned long long power(unsigned long long b, unsigned long long e, unsigned lo
     while (*pow_done !=1 );
     long long int result = *pow_out;
     *pow_load = 0;
+    printf("[debug] pow(%lld, %lld, %lld) = %lld\n", b, e, m, result);
     return result;
 }
