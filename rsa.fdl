@@ -133,78 +133,10 @@ fsm gcd_fsm(gcd_dp) {
     @s2 (log) -> s2;
 }
 
-dp choose_d_dp(
-    in  e   :   ns(32);
-    in  z   :   ns(32);
-    in  d   :   ns(32);
-    in  load:   ns(1);
-    out c   :   ns(32);
-    out done:   ns(1)
-) {
-    reg d_cal: ns(32);
-    reg c_out : ns(32);
-    reg lda, done_out : ns(1);
-
-    always {
-        done = ((d_cal * e) % z) == 1 | d_cal >= z;
-        c = d_cal;
-        lda = load;
-    }
-
-    sfg init {
-        d_cal = d;
-    }
-
-    sfg reduce_next {
-        d_cal = d_cal + 1;
-    }
-
-    sfg log {
-        $display("choose d: cycle=", $cycle, " e=", e, " z=", z, " c=", c, " d=", d_cal, " done=", done);
-    }
-}
-
-fsm choose_d_fsm(choose_d_dp) {
-    initial s0;
-    state s1, s2;
-    @s0 
-        if (lda) then (init, log) -> s1;
-        else (log) -> s0;
-    @s1 
-        if (done) then (log) -> s2;
-        else (reduce_next, log) -> s1;
-    @s2 (log) -> s2;
-}
-
-dp gendata(
-    out e   :   ns(32);
-    out lda :   ns(1);
-    out d   :   ns(32);
-    out z   :   ns(32);
-    out msg :   ns(32);
-    out n   :   ns(32)
-) {
-    sfg run {
-        e = 2;
-        lda = 1;
-        d = 2;
-        z = 24;
-        msg = 33;
-        n = 35;
-    }
-}
-
 hardwired gendata_wired(gendata) {
     run;
 }
 
-dp logger(
-    in  data    :   ns(32)
-) {
-    always {
-        $display("cycle=", $cycle, " data: ", data);
-    }
-}
 
 dp pow_dp (
     in  a   :   ns(32);
