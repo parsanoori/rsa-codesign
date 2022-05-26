@@ -1,21 +1,5 @@
 #include <stdio.h>
 
-// gcd memory map
-volatile unsigned long long int *gcd_in_a = (unsigned long long int *) 0x80000000;
-volatile unsigned long long int *gcd_in_b = (unsigned long long int *) 0x80000008;
-volatile unsigned long long int *gcd_out = (unsigned long long int *) 0x80000010;
-volatile unsigned  int *gcd_load = (unsigned int *) 0x80000018;
-volatile unsigned  int *gcd_done = (unsigned int *) 0x8000001c;
-
-// power memory map
-volatile unsigned long long int *pow_in_b = (unsigned long long int *) 0x80000020;
-volatile unsigned long long int *pow_in_e = (unsigned long long int *) 0x80000028;
-volatile unsigned long long int *pow_in_m = (unsigned long long int *) 0x80000030;
-volatile unsigned long long int *pow_out = (unsigned long long int *) 0x80000038;
-volatile unsigned  int *pow_load = (unsigned int *) 0x80000040;
-volatile unsigned  int *pow_done = (unsigned int *) 0x80000044;
-
-// prototypes
 unsigned long long int gcd(unsigned long long int, unsigned long long int);
 unsigned long long int lcm(unsigned long long int, unsigned long long int);
 unsigned long long power(unsigned long long, unsigned long long, unsigned long long);
@@ -74,29 +58,30 @@ int main(){
     return 0;
 }
 
-unsigned long long int gcd(unsigned long long int a, unsigned long long int b){
-    *gcd_in_a = a;
-    *gcd_in_b = b;
-    *gcd_load = 1;
-    while (*gcd_done !=1 );
-    long long int result = *gcd_out;
-    *gcd_load = 0;
-    printf("[debug] gcd(%lld, %lld) = %lld\n", a, b, result);
-    return result;
+unsigned long long int gcd(unsigned long long int a, unsigned long long int h){
+    unsigned long long int a_f = a;
+    unsigned long long int h_f = h;
+    unsigned long long int temp;
+    while (1) {
+        temp = a%h;
+        if (temp == 0) {
+            printf("[debug] gcd(%lld, %lld) = %lld\n", a_f, h_f, h);
+            return h;
+            }
+        a = h;
+        h = temp;
+    }
 }
 
 unsigned long long int lcm(unsigned long long int a, unsigned long long int h){
     return (a*h)/gcd(a, h);
 }
 
-unsigned long long power(unsigned long long b, unsigned long long e, unsigned long long m){
-    *pow_in_b = b;
-    *pow_in_e = e;
-    *pow_in_m = m;
-    *pow_load = 1;
-    while (*pow_done !=1 );
-    long long int result = *pow_out;
-    *pow_load = 0;
-    printf("[debug] pow(%lld, %lld, %lld) = %lld\n", b, e, m, result);
-    return result;
+unsigned long long power(unsigned long long a, unsigned long long n, unsigned long long m){
+    unsigned long long pow = a;
+    for (int i=1; i<n; i++){
+        pow = (pow*a)%m;
+    }
+    printf("[debug] pow(%lld, %lld, %lld) = %lld\n", a, n, m, pow);
+    return pow;
 }

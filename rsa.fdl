@@ -75,48 +75,36 @@ ipblock arm_pow_done(in data : ns(1)){
 
 
 dp gcd_dp(
-    in  e   :   ns(64);
-    in  z   :   ns(64);
+    in  a_in   :   ns(64);
+    in  b_in   :   ns(64);
     in  load:   ns(1);
-    out c   :   ns(64);
+    out o   :   ns(64);
     out done:   ns(1)
 ) {
-    reg e_in : ns(64);
-    reg z_in : ns(64);
-    reg e_cal: ns(64);
-    reg c_out : ns(64);
-    reg lda : ns(1);
-    reg done_gcd : ns(1);
+    reg a, b: ns(64);
 
     always {
-        lda = load;
-        c = e_cal;
-        done = (e_cal >= z | c_out == 1);
+        o = b;
+    }
+
+    sfg ready {
+        done = 0;
     }
 
     sfg init {
-        e_in = e;
-        z_in = z;
-        e_cal = e;
-        c_out = 0;
+        a = a_in;
+        b = b_in;
+        done = 0;
     }
 
-    sfg reduce {
-        e_in = (e_in > z_in) ? e_in - z_in : e_in;
-        z_in = (e_in > z_in) ? z_in : z_in - e_in;
-        c_out = (e_in > z_in) ? e_in : z_in;
-        done_gcd = e_in == 0 | z_in == 0;
+    sfg loop {
+        a = b;
+        b = a%b;
+        done = 0;
     }
 
-    sfg reduce_next {
-        e_in = e_cal + 1;
-        e_cal = e_cal + 1;
-        z_in = z;
-        done_gcd = 0;
-    }
-
-    sfg log {
-        $display("gcd: cycle=", $cycle, " e=", e_cal, " z=", z, " c=", c, " done", done);
+    sfg outp_idle {
+        done = 1;
     }
 }
 
@@ -124,13 +112,13 @@ fsm gcd_fsm(gcd_dp) {
     initial s0;
     state s1, s2;
     @s0 
-        if (lda) then (init, log) -> s1;
-        else (log) -> s0;
+        if (load) then (init) -> s1;
+        else (ready) -> s0;
     @s1 
-        if (done) then (log) -> s2;
-        else if (done_gcd) then (reduce_next, log) -> s1;
-        else (reduce, log) -> s1;
-    @s2 (log) -> s2;
+        if (a%b==0) then (outp_idle) -> s2;
+        else (loop) -> s1;
+    @s2 if (load) then (outp_idle) -> s2;
+        else (ready) -> s0;
 }
 
 //hardwired gendata_wired(gendata) {
