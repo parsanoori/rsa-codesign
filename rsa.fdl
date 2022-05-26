@@ -106,6 +106,10 @@ dp gcd_dp(
     sfg outp_idle {
         done = 1;
     }
+
+    sfg log {
+        $display("GCD: ", "cycle=", $cycle, " a=", a, " b=", b, " load=", load, " o=", o, " done=", done);
+    }
 }
 
 fsm gcd_fsm(gcd_dp) {
@@ -116,7 +120,7 @@ fsm gcd_fsm(gcd_dp) {
         else (ready) -> s0;
     @s1 
         if (a%b==0) then (outp_idle) -> s2;
-        else (loop) -> s1;
+        else (loop, log) -> s1;
     @s2 if (load) then (outp_idle) -> s2;
         else (ready) -> s0;
 }
@@ -155,6 +159,10 @@ dp pow_dp (
     sfg outp_idle {
         done = 1;
     }
+
+    sfg log {
+        $display("POWER: ","cycle=", $cycle, " b=", b, " e=", e, " m=", m, " load=", load, " o=", o, " acc=", acc, " done=", done);
+    }
 }
 
 fsm pow_fsm(pow_dp) {
@@ -166,7 +174,7 @@ fsm pow_fsm(pow_dp) {
         else (ready) -> s0;
     @s1 
         if (i==e) then (outp_idle) -> s2;
-        else (loop) -> s1;
+        else (loop,log) -> s1;
     @s2 if (load) then (outp_idle) -> s2;
         else (ready) -> s0;
 }
