@@ -4,31 +4,31 @@ ipblock myarm{
     ipparm "period=1";
 }
 
-ipblock arm_gcd_in_a(in gcd_in_a : ns(64)){
+ipblock arm_gcd_in_a(in data : ns(64)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000000";
 }
 
-ipblock arm_gcd_in_b(in gcd_in_b : ns(64)){
+ipblock arm_gcd_in_b(in data : ns(64)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000008";
 }
 
-ipblock arm_gcd_out(in gcd_out : ns(64)){
+ipblock arm_gcd_out(out data : ns(64)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000010";
 }
 
-ipblock arm_gcd_load(in gcd_load : ns(1)){
+ipblock arm_gcd_load(in data : ns(1)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000018";
 }
 
-ipblock arm_gcd_load(in gcd_done : ns(1)){
+ipblock arm_gcd_done(out data : ns(1)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x8000001c";
@@ -36,37 +36,37 @@ ipblock arm_gcd_load(in gcd_done : ns(1)){
 
 
 
-ipblock arm_pow_in_b(in pow_in_b : ns(64)){
+ipblock arm_pow_in_b(in data : ns(64)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000020";
 }
 
-ipblock arm_pow_in_e(in pow_in_e : ns(64)){
+ipblock arm_pow_in_e(in data : ns(64)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000028";
 }
 
-ipblock arm_pow_in_m(in pow_in_m : ns(64)){
+ipblock arm_pow_in_m(in data : ns(64)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000030";
 }
 
-ipblock arm_pow_out(in pow_out : ns(64)){
+ipblock arm_pow_out(out data : ns(64)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000038";
 }
 
-ipblock arm_pow_load(in pow_load : ns(1)){
+ipblock arm_pow_load(in data : ns(1)){
     iptype "armsystemsink";
     ipparm "core=myarm";
     ipparm "address=0x80000040";
 }
 
-ipblock arm_pow_done(in pow_done : ns(1)){
+ipblock arm_pow_done(out data : ns(1)){
     iptype "armsystemsource";
     ipparm "core=myarm";
     ipparm "address=0x80000044";
@@ -133,9 +133,9 @@ fsm gcd_fsm(gcd_dp) {
     @s2 (log) -> s2;
 }
 
-hardwired gendata_wired(gendata) {
-    run;
-}
+//hardwired gendata_wired(gendata) {
+//    run;
+//}
 
 
 dp pow_dp (
@@ -187,7 +187,8 @@ fsm pow_fsm(pow_dp) {
 }
 
 dp top() {
-    sig gcd_in_a, gcd_in_b, gcd_out : ns(64);
+    sig gcd_in_a, gcd_out : ns(64);
+    sig gcd_in_b : ns(64);
     sig gcd_load, gcd_done : ns(1);
     sig pow_in_b, pow_in_e, pow_in_m, pow_out : ns(64);
     sig pow_load, pow_done : ns(1);
